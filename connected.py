@@ -320,9 +320,10 @@ class VDP_ReLU(keras.layers.Layer):
         return mu_out, Sigma_out
 
 class VDP_GeLU(keras.layers.Layer):
-    def __init__(self,**kwargs):
-        super(VDP_GeLU, self).__init__(**kwargs)
-    def call(self, mu_in, Sigma_in):  # mu_in = [50,17,64], Sigma_in= [50,17,64]
+    def _init(self, **kwargs): 
+        super(VDP_GeLU, self)._init_(**kwargs)  
+    def call(self, mu_in, Sigma_in):  # mu_in = [50,17,64], Sigma_in = [50,17,64]
+        # Apply the GeLU activation function to the mean input
         mu_out = tf.nn.gelu(mu_in)  # [50,17,64]
         with tf.GradientTape() as g:
             g.watch(mu_in)
@@ -366,9 +367,18 @@ class Density_prop_DNN(tf.keras.Model):
 
         return mu_out, Sigma_out, kl_total
 
-    # I have changed the test4 to tes5 name for github assignment3
-        # I have changed the test4 to tes5 name for github assignment3
-wandb.init(project="Test5" ) #, entity="your_wandb_username")
+    # I have changed the test5 to test6 name for github assignment3
+#wandb.init(project="Test6" ) #, entity="your_wandb_username")
+
+class WandbProject:
+    def _init_(self, project_name="Test1", entity=None):
+        self.project_name = project_name
+        self.entity = entity
+
+    def initialize(self):
+
+        wandb.init(project=self.project_name, entity=self.entity)
+        print(f"Wandb project '{self.project_name}' initialized successfully.")
 
 def main_function(image_size=28, units1=200, units2=100, units3=10, epochs=20,  lr=0.0001, lr_end=0.00001,
                   batch_size=50, num_classes=10,kl_factor=0.01,Training = True, Testing= False, Random_noise=False, gaussain_noise_std=0.25):
